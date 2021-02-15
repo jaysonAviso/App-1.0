@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../_services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -8,8 +9,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  @Output() cancelRegister = new EventEmitter();
 
-  constructor(private validator: FormBuilder) { }
+  constructor(private validator: FormBuilder, private authService: AuthService) { }
 
   ngOnInit() {
     this.initForm();
@@ -28,10 +30,15 @@ export class RegisterComponent implements OnInit {
 }
 
   register() {
-    console.log(this.registerForm.value);
+    this.authService.register(this.registerForm.value).subscribe(() =>{
+      console.log('registration successful');
+    }, error => {
+      console.error(error.error)
+    });
   }
 
   cancel() {
+    this.cancelRegister.emit(false);
     console.log('cancelled')
   }
 
