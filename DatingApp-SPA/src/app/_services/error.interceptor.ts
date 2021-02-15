@@ -11,6 +11,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError(error => {
                 if(error instanceof HttpErrorResponse) {
+                    if(error.status === 401) {
+                        return throwError(error.statusText);
+                    }
                     const applicationError = error.headers.get('Application-Error');
                     if(applicationError) {
                         console.error(applicationError);
@@ -18,6 +21,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     }
                     
                     const serverError = error.error.errors;
+                    const serverErrors = error.error;
                     
                     let modalStateError = '';
                     if(serverError && typeof serverError === "object") {
@@ -27,11 +31,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                             }
                         }
                     }
-                    // console.log(error);
-                    // console.log(serverError);
-                    // console.log(modalStateError);
-                    // console.log(throwError(modalStateError || serverError || 'Server Error'));
-                    return throwError(modalStateError || serverError || 'Server Error');
+                    return throwError(modalStateError || serverError || serverErrors || 'Server Error');
                 }
             })
         );

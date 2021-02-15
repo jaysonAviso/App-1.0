@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
     this.authService.register(this.registerForm.value).subscribe(() =>{
       console.log('registration successful');
     }, error => {
-      console.error(error.error)
+      console.log(error)
     });
   }
 
