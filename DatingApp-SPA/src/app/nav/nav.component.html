@@ -1,42 +1,69 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand col-2" href="#">Dating App</a>
-
-    <ul class="navbar-nav me-auto mb-2 mb-md-0 col-5">
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">Matches</a>
-      </li>
-      <li class="nav-item"> 
-        <a class="nav-link active" aria-current="page" href="#">Lists</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">Messages</a>
-      </li>
-      <li class="nav-item">
-        <a (click)="logout()" class="nav-link active" aria-current="page" href="#">Logout</a>
-      </li>
-    </ul>
-
-    <div *ngIf="loggedIn()" class="dropdown col-5 d-flex justify-content-end">
-      <a class="dropdown-toggle text-light">
-        Welcome User
-      </a>
-    
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#"><i class="fa fa-user"></i> Edit Profile</a></li>
-        <div class="dropdown-divider"></div>
-        <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out"></i> Logout</a></li>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+  <div class="container">
+    <div class="col d-flex">
+      <a class="navbar-brand" href="#">Dating App</a>
+      <ul *ngIf="loggedIn()" class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Matches</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Lists</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Messages</a>
+        </li>
       </ul>
     </div>
 
+    <div *ngIf="loggedIn()" class="dropdown" dropdown>
+      <a class="dropdown-toggle text-light" dropdownToggle>
+        Welcome {{ authservice.decodedToken?.unique_name }}
+      </a>
 
-    <form *ngIf="!loggedIn()" [formGroup]="loginForm" class="d-flex justify-content-end col-5" (ngSubmit)="login()">
-      <input class="form-control me-2" type="username" placeholder="Username" 
-            name="username" aria-label="Username" formControlName="username">
+      <ul class="dropdown-menu mt-3" *dropdownMenu>
+        <li>
+          <a class="dropdown-item" href="#">
+            <i class="fa fa-user"></i> Edit Profile</a>
+        </li>
+        <div class="dropdown-divider"></div>
+        <li>
+          <a class="dropdown-item" href="#" (click)="logout()">
+            <i class="fa fa-sign-out"></i> Logout</a>
+        </li>
+      </ul>
+    </div>
 
-      <input class="form-control me-2 ml-2" type="password" placeholder="Password" 
-            name="password" aria-label="Password" formControlName="password">
+    <form
+      *ngIf="!loggedIn()"
+      [formGroup]="loginForm"
+      class="d-flex justify-content-end col-5"
+      (ngSubmit)="login()"
+    >
+      <input
+        class="form-control me-2"
+        type="username"
+        placeholder="Username"
+        name="username"
+        aria-label="Username"
+        formControlName="username"
+      />
 
-      <button [disabled]="!loginForm.valid" class="btn btn-outline-success ml-2" 
-            type="submit">Login</button>
+      <input
+        class="form-control me-2 ml-2"
+        type="password"
+        placeholder="Password"
+        name="password"
+        aria-label="Password"
+        formControlName="password"
+      />
+
+      <button
+        [disabled]="!loginForm.valid"
+        class="btn btn-secondary ml-2"
+        type="submit"
+      >
+        Login
+      </button>
     </form>
+  </div>
 </nav>
