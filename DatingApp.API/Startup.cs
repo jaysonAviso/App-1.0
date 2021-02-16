@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -45,10 +46,12 @@ namespace DatingApp.API
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+            services.AddMvc();
             services.AddCors();
             // services.AddSingleton<Seed>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option => {
                     option.TokenValidationParameters = new TokenValidationParameters
@@ -89,6 +92,8 @@ namespace DatingApp.API
             }
             // seeder.SeedUsers();
             app.UseHttpsRedirection();
+
+            // app.UseMvc();
             
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
