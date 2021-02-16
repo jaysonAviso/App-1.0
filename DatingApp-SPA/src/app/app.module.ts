@@ -3,7 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { NgxGalleryModule } from 'ngx-gallery';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,9 +15,15 @@ import { RegisterComponent } from './register/register.component';
 import { AuthService } from './_services/auth.service';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { AlertifyService } from './_services/alertify.service';
-import { MemberListComponent } from './MemberList/MemberList.component';
 import { MessagesComponent } from './Messages/Messages.component';
 import { ListsComponent } from './Lists/Lists.component';
+import { UserService } from './_services/user.service';
+import { MemberCardComponent } from './Members/member-card/member-card.component';
+import { JwtModule } from '@auth0/angular-jwt';
+import { MemberDetailComponent } from './Members/member-detail/member-detail.component';
+import { MemberListComponent } from './Members/MemberList/MemberList.component';
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberlistResolver } from './_resolvers/member-list.resolver';
 
 @NgModule({
   declarations: [							
@@ -24,6 +32,8 @@ import { ListsComponent } from './Lists/Lists.component';
       HomeComponent,
       RegisterComponent,
       MemberListComponent,
+      MemberCardComponent,
+      MemberDetailComponent,
       MessagesComponent,
       ListsComponent
    ],
@@ -33,13 +43,27 @@ import { ListsComponent } from './Lists/Lists.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
+    // NgxGalleryModule,
     BsDropdownModule.forRoot(),
-    BrowserAnimationsModule
+    TabsModule.forRoot(),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem('token');
+        },
+        allowedDomains: ['localhost:5000'],
+        disallowedRoutes: ['localhost:5000/api/auth']
+      }
+    })
   ],
   providers: [
     AuthService,
     ErrorInterceptorProvider,
-    AlertifyService
+    AlertifyService,
+    UserService,
+    MemberDetailResolver,
+    MemberlistResolver
   ],
   bootstrap: [AppComponent]
 })
