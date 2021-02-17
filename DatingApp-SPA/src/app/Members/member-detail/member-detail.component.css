@@ -13,4 +13,7 @@
     background-color: #fff;
     border-top: none;
 }
-
+#carouselExampleIndicators {
+    width: 420px;
+    height: 420px;
+}

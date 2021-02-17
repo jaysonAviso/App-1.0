@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { NgxGalleryModule } from 'ngx-gallery';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,6 +23,9 @@ import { MemberDetailComponent } from './Members/member-detail/member-detail.com
 import { MemberListComponent } from './Members/MemberList/MemberList.component';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { MemberlistResolver } from './_resolvers/member-list.resolver';
+import { MemberEditComponent } from './Members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
 @NgModule({
   declarations: [							
@@ -34,6 +36,7 @@ import { MemberlistResolver } from './_resolvers/member-list.resolver';
       MemberListComponent,
       MemberCardComponent,
       MemberDetailComponent,
+      MemberEditComponent,
       MessagesComponent,
       ListsComponent
    ],
@@ -44,7 +47,6 @@ import { MemberlistResolver } from './_resolvers/member-list.resolver';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    // NgxGalleryModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     JwtModule.forRoot({
@@ -63,7 +65,9 @@ import { MemberlistResolver } from './_resolvers/member-list.resolver';
     AlertifyService,
     UserService,
     MemberDetailResolver,
-    MemberlistResolver
+    MemberlistResolver,
+    MemberEditResolver,
+    PreventUnsavedChanges
   ],
   bootstrap: [AppComponent]
 })
