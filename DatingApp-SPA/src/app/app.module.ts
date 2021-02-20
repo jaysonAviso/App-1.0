@@ -26,9 +26,11 @@ import { MemberlistResolver } from './_resolvers/member-list.resolver';
 import { MemberEditComponent } from './Members/member-edit/member-edit.component';
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+import { PhotoEditorComponent } from './Members/photo-editor/photo-editor.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
-  declarations: [							
+  declarations: [								
     AppComponent,
       NavComponent,
       HomeComponent,
@@ -38,7 +40,8 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
       MemberDetailComponent,
       MemberEditComponent,
       MessagesComponent,
-      ListsComponent
+      ListsComponent,
+      PhotoEditorComponent
    ],
   imports: [
     BrowserModule,
@@ -46,6 +49,7 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    FileUploadModule,
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
@@ -58,6 +62,9 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
         disallowedRoutes: ['localhost:5000/api/auth']
       }
     })
+  ],
+  exports:[
+    FileUploadModule
   ],
   providers: [
     AuthService,

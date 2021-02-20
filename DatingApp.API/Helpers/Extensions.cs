@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
 namespace DatingApp.API.Helpers
@@ -19,6 +20,15 @@ namespace DatingApp.API.Helpers
                 age--;
 
             return age;
+        }
+
+        public static string GetUserId(this ClaimsPrincipal user)
+        {
+            return user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+        public static string GetUsername(this ClaimsPrincipal user)
+        {
+            return user.FindFirst(ClaimTypes.Name)?.Value;
         }
     }
 }

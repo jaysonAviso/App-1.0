@@ -46,11 +46,13 @@ namespace DatingApp.API
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+            // services.AddSingleton<Seed>();
             services.AddMvc();
             services.AddCors();
-            // services.AddSingleton<Seed>();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(option => {
