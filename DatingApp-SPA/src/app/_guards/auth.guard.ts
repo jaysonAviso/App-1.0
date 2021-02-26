@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AlertifyService } from '../_services/alertify.service';
 import { AuthService } from '../_services/auth.service';
 
@@ -10,13 +12,14 @@ export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router,
     private alertify: AlertifyService) {}
-  canActivate():  boolean {
-    if (this.authService.loggedIn()) {
-      return true;
-    }
+  canActivate(): Observable<boolean> {
 
-    this.alertify.error('You shall not pass!!!');
-    this.router.navigate(['/home']);
-    return false;
+    return this.authService.currentUser$.pipe(
+      map(user => {
+        if(user) return true;
+        this.alertify.error("You shall not pass!");
+        this.router.navigate(['/home']);
+      })
+    );
   }
 }

@@ -10,22 +10,23 @@ import { User } from '../_models/user';
 export class UserService {
   baseUrl = environment.apiUrl;
   
-
-  
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<User[]> {
+  getUsers() {
     return this.http.get<User[]>(`${this.baseUrl}users`);
   }
 
-  getUser(id): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}users/${id}`);
+  getUser(username) {
+    return this.http.get<User>(`${this.baseUrl}users/${username}`);
   }
 
-  updateUser(id: number, user: User) {
-    return this.http.put(`${this.baseUrl}users/${id}`, user);
+  updateUser(username: string, user: User) {
+    return this.http.put(`${this.baseUrl}users/${username}`, user);
   }
   setMainPhoto(id: number) {
     return this.http.post(`${this.baseUrl}users/${id}/setMain`,{});
+  }
+  deletePhoto(photoId: number) {
+    return this.http.delete(`${this.baseUrl}users/delete-photo/${photoId}`)
   }
 }

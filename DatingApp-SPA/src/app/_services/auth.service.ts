@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators'
+import { LoginUser } from '../_models/loginUser';
 
 @Injectable({
   providedIn: 'root'
@@ -9,17 +11,18 @@ import { map } from 'rxjs/operators'
 export class AuthService {
   baseUrl = 'http://localhost:5000/api/auth/';
   jwtHelper = new JwtHelperService();
-  decodedToken: any;
+  currentUserSource = new ReplaySubject<LoginUser>(1);
+  currentUser$ = this.currentUserSource.asObservable();
+
 
 constructor(private http: HttpClient) {}
 
 login(model: any) {
    return this.http.post(`${this.baseUrl}login`, model).pipe(
-     map((response: any) => {
+     map((response: LoginUser) => {
        const user = response;
        if(user){
-         localStorage.setItem('token', user.token);
-         this.decodedToken = this.jwtHelper.decodeToken(user.token);
+         this.setCurrentUser(user);
        }
       })
     );
@@ -29,8 +32,13 @@ login(model: any) {
     return this.http.post(`${this.baseUrl}register`, model);
   }
 
-  loggedIn() {
-    const token = localStorage.getItem('token');
-    return !this.jwtHelper.isTokenExpired(token);
+  setCurrentUser(user: LoginUser) {
+    localStorage.setItem('user', JSON.stringify(user));
+    this.currentUserSource.next(user);
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.currentUserSource.next(null);
   }
 }

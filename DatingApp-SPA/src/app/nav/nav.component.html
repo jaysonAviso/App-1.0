@@ -2,27 +2,30 @@
   <div class="container">
     <div class="col d-flex">
       <a class="navbar-brand" [routerLink]="['/home']">Dating App</a>
-      <ul *ngIf="loggedIn()" class="navbar-nav me-auto mb-2 mb-md-0">
-        <li class="nav-item" routerLinkActive="active" >
-          <a class="nav-link" [routerLink]="['/members']">Matches</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active" >
-          <a class="nav-link" [routerLink]="['/lists']">Lists</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active" >
-          <a class="nav-link" [routerLink]="['/messages']">Messages</a>
-        </li>
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <ng-container *ngIf="authservice.currentUser$ | async">
+          <li class="nav-item" routerLinkActive="active" >
+            <a class="nav-link" [routerLink]="['/members']">Matches</a>
+          </li>
+          <li class="nav-item" routerLinkActive="active" >
+            <a class="nav-link" [routerLink]="['/lists']">Lists</a>
+          </li>
+          <li class="nav-item" routerLinkActive="active" >
+            <a class="nav-link" [routerLink]="['/messages']">Messages</a>
+          </li>
+        </ng-container>
       </ul>
     </div>
 
-    <div *ngIf="loggedIn()" class="dropdown" dropdown>
-      <a class="dropdown-toggle text-light" dropdownToggle>
-        Welcome {{ authservice.decodedToken?.unique_name }}
+    <div *ngIf="(authservice.currentUser$  | async) as user" class="dropdown" dropdown>
+      <img src="{{user.photoUrl}}" alt="{{user.username}}">
+      <a class="dropdown-toggle text-light ml-2" dropdownToggle>
+        Welcome {{ user.username | titlecase }}
       </a>
 
       <ul class="dropdown-menu mt-3" *dropdownMenu>
         <li>
-          <a class="dropdown-item" [routerLink]="['/member/edit']">
+          <a class="dropdown-item" [routerLink]="['/member/edit',user.username]">
             <i class="fa fa-user"></i> Edit Profile</a>
         </li>
         <div class="dropdown-divider"></div>
@@ -34,7 +37,7 @@
     </div>
 
     <form
-      *ngIf="!loggedIn()"
+      *ngIf="(authservice.currentUser$ | async) === null"
       [formGroup]="loginForm"
       class="d-flex justify-content-end col-5"
       (ngSubmit)="login()"

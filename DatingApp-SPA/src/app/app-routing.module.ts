@@ -21,9 +21,9 @@ const routes: Routes = [
     children: [
       {path: 'members', component: MemberListComponent,
         resolve: {users: MemberlistResolver}},
-      {path: 'members/:id', component: MemberDetailComponent,
+      {path: 'members/:username', component: MemberDetailComponent,
         resolve: {user: MemberDetailResolver}},
-      {path: 'member/edit', component: MemberEditComponent,
+      {path: 'member/edit/:username', component: MemberEditComponent,
         resolve: {user: MemberEditResolver}, canDeactivate: [PreventUnsavedChanges]},
       {path: 'messages', component: MessagesComponent},
       {path: 'lists', component: ListsComponent}

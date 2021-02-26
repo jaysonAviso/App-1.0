@@ -39,26 +39,23 @@ namespace DatingApp.API.Controllers
             return Ok(usersToReturn);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetUser(string username)
         {
-            // var user = await _repo.GetByUsername(username);
-            var user = await _repo.GetUser(id);
+            var user = await _repo.GetByUsername(username);
 
             var userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
             return Ok(userToReturn);
         }
 
-        [HttpPut("{id}", Name = "GetUser")]
-        public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+        [HttpPut("{username}", Name = "GetUser")]
+        public async Task<IActionResult> UpdateUser(string username, UserForUpdateDto userForUpdateDto)
         {
-            // if (username != User.GetUsername())
-            if (id != int.Parse(User.GetUserId()))
+            if (username != User.GetUsername())
                 return Unauthorized();
 
-            // var userFromRepo = await _repo.GetByUsername(username);
-            var userFromRepo = await _repo.GetUser(id);
+            var userFromRepo = await _repo.GetByUsername(username);
 
             _mapper.Map(userForUpdateDto, userFromRepo);
 
@@ -90,7 +87,6 @@ namespace DatingApp.API.Controllers
             user.Photos.Add(photo);
 
             if (await _repo.SaveAll())
-                // return _mapper.Map<PhotoDto>(photo);
                 return Created("GetUser",_mapper.Map<PhotoDto>(photo));
 
             return BadRequest("Problem adding photo");
@@ -99,8 +95,8 @@ namespace DatingApp.API.Controllers
         [HttpPost("{id}/setMain")]
         public async Task<IActionResult> SetMainPhoto(int id)
         {
-            // var user = await _repo.GetByUsername(username);
-            var user = await _repo.GetUser(int.Parse(User.GetUserId()));
+            var user = await _repo.GetByUsername(User.GetUsername());
+            // var user = await _repo.GetUser(int.Parse(User.GetUserId()));
 
             if(!user.Photos.Any(p => p.Id == id))
                 return Unauthorized();
@@ -119,6 +115,30 @@ namespace DatingApp.API.Controllers
                 return NoContent();
 
             return BadRequest("Could not set photo to main");
+        }
+
+        [HttpDelete("delete-photo/{photoId}")]
+        public async Task<ActionResult> DeletePhoto(int photoId)
+        {
+            var user = await _repo.GetByUsername(User.GetUsername());
+
+            var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
+
+            if(photo == null) return NotFound();
+
+            if(photo.IsMain) return BadRequest("You cannot delete your main photo");
+
+            if(photo.PublicId != null)
+            {
+                var result = await _photoService.DeletePhoto(photo.PublicId);
+                if(result.Error != null) return BadRequest(result.Error.Message);
+            }
+
+            user.Photos.Remove(photo);
+
+            if(await _repo.SaveAll()) return Ok();
+
+            return BadRequest("Failed to delete the photo");
         }
     }
 }

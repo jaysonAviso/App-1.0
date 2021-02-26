@@ -1,11 +1,11 @@
 <div class="container mt-4">
-  <div><h1>{{user.knownAs}}'s Profile</h1></div>
+  <div><h1>{{user.knownAs | titlecase}}'s Profile</h1></div>
   <div class="row">
     <div class="col-sm-4">
       <div class="card">
         <img
           class="card-img-top img-thumbnail"
-          src="{{ user.photoUrl }}"
+          src="{{ user.photoUrl || '../../../../../assets/16.1 user.png.png' }}"
           alt="{{ user.knownAs }}"
         />
         <div class="card-body">
@@ -48,26 +48,7 @@
             <p>{{ user.interests }}</p>
           </tab>
           <tab heading="Photos">
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-              <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-              </ol>
-              <div *ngFor="let image of images" class="carousel-inner">
-                <div class="carousel-item active">
-                  <img class="d-block w-100" src="{{image.big}}" alt="{{image.description}}">
-                </div>
-              </div>
-              <a class="carousel-control-prev"  role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-              <a class="carousel-control-next"  role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
-            </div>
+            <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
           </tab>
           <tab heading="Messages">
             <p>Messages will go here</p>

@@ -11,7 +11,8 @@ import { AuthService } from '../_services/auth.service';
 })
 export class NavComponent implements OnInit {
   loginForm: FormGroup;
-  constructor(private validator: FormBuilder, private authservice: AuthService,
+
+  constructor(private validator: FormBuilder, public authservice: AuthService,
     private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit() {
@@ -41,12 +42,8 @@ export class NavComponent implements OnInit {
     })
   }
 
-  loggedIn() {
-     return this.authservice.loggedIn();
-  }
-
   logout() {
-    localStorage.removeItem('token');
+    this.authservice.logout();
     this.alertify.message('logged out');
     this.router.navigate(['/home']);
   }

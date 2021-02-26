@@ -11,9 +11,9 @@ import { UserService } from "../_services/user.service";
 export class MemberDetailResolver implements Resolve<User> {
     constructor(private userSevice: UserService,
         private router: Router, private alertify: AlertifyService) {}
-
+    
     resolve(route: ActivatedRouteSnapshot): Observable<User> {
-        return this.userSevice.getUser(route.params['id']).pipe(
+        return this.userSevice.getUser(route.params['username']).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving data');
                 this.router.navigate(['/members']);

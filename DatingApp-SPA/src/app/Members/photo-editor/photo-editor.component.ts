@@ -6,6 +6,7 @@ import { Photo } from 'src/app/_models/photo';
 import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { User } from 'src/app/_models/user';
+import { LoginUser } from 'src/app/_models/loginUser';
 
 @Component({
   selector: 'app-photo-editor',
@@ -18,11 +19,14 @@ export class PhotoEditorComponent implements OnInit {
   hasBaseDropZoneOver:boolean = false;
   baseUrl = environment.apiUrl;
   currentMain: Photo;
+  LoginUser: LoginUser;
 
   constructor(private authService: AuthService,
     private userService: UserService, private alertify: AlertifyService) { }
+  
 
   ngOnInit() {
+    this.authService.currentUser$.subscribe(user => this.LoginUser = user)
     this.initializeUploader();
   }
 
@@ -33,7 +37,7 @@ export class PhotoEditorComponent implements OnInit {
   initializeUploader() {
    this.uploader = new FileUploader({
      url: this.baseUrl + 'users/add-photo',
-     authToken: 'Bearer ' + localStorage.getItem('token'),
+     authToken: 'Bearer ' + this.LoginUser.token,
      isHTML5: true,
      allowedFileType: ['image'],
      removeAfterUpload: true,
@@ -67,5 +71,11 @@ export class PhotoEditorComponent implements OnInit {
       this.currentMain.isMain = false;
       photo.isMain = true;
     }, error => this.alertify.error(error));
+  }
+
+  deletePhoto(photoId: number) {
+    this.userService.deletePhoto(photoId).subscribe(() => {
+      this.user.photos = this.user.photos.filter(x => x.id !== photoId);
+    })
   }
 }

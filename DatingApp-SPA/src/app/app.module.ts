@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -12,7 +12,6 @@ import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthService } from './_services/auth.service';
-import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { AlertifyService } from './_services/alertify.service';
 import { MessagesComponent } from './Messages/Messages.component';
 import { ListsComponent } from './Lists/Lists.component';
@@ -28,6 +27,11 @@ import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './Members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { ErrorInterceptor } from './_interceptors/error.interceptor';
+import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import { NgxSpinnerModule } from "ngx-spinner";
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [								
@@ -53,24 +57,14 @@ import { FileUploadModule } from 'ng2-file-upload';
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: () => {
-          return localStorage.getItem('token');
-        },
-        allowedDomains: ['localhost:5000'],
-        disallowedRoutes: ['localhost:5000/api/auth']
-      }
-    })
-  ],
-  exports:[
-    FileUploadModule
+    JwtModule,
+    NgxGalleryModule,
+    NgxSpinnerModule
   ],
   providers: [
-    AuthService,
-    ErrorInterceptorProvider,
-    AlertifyService,
-    UserService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
     MemberDetailResolver,
     MemberlistResolver,
     MemberEditResolver,
@@ -79,3 +73,7 @@ import { FileUploadModule } from 'ng2-file-upload';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+//     AuthService,
+//     AlertifyService,
+//     UserService,
