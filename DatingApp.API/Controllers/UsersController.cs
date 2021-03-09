@@ -30,13 +30,17 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUser([FromQuery]UserParams userParams)
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
+            var user = await _repo.GetByUsername(User.GetUsername());
+            userParams.CurrentUser = user.Username;
+
+            if(string.IsNullOrEmpty(userParams.Gender))
+                userParams.Gender = user.Gender == "male"? "female" : "male";
+
             var users = await _repo.GetUsers(userParams);
 
             Response.AddPagenationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
-
-            // var usersToReturn = _mapper.Map<IEnumerable<UserListDto>>(users);
 
             return Ok(users);
         }
@@ -69,7 +73,7 @@ namespace DatingApp.API.Controllers
         [HttpPost("add-photo")]
         public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
         {
-            var user = await _repo.GetUser(int.Parse(User.GetUserId()));
+            var user = await _repo.GetByUsername(User.GetUsername());
 
             var result = await _photoService.AddPhoto(file);
 
@@ -98,7 +102,6 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> SetMainPhoto(int id)
         {
             var user = await _repo.GetByUsername(User.GetUsername());
-            // var user = await _repo.GetUser(int.Parse(User.GetUserId()));
 
             if(!user.Photos.Any(p => p.Id == id))
                 return Unauthorized();

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TabsetConfig, TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -35,6 +35,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DateInputComponent } from './_forms/date-input/date-input.component';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @NgModule({
   declarations: [								
@@ -64,6 +65,7 @@ import { DateInputComponent } from './_forms/date-input/date-input.component';
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
     JwtModule,
+    PaginationModule,
     NgxGalleryModule,
     NgxSpinnerModule
   ],
@@ -74,7 +76,8 @@ import { DateInputComponent } from './_forms/date-input/date-input.component';
     MemberDetailResolver,
     MemberlistResolver,
     MemberEditResolver,
-    PreventUnsavedChanges
+    PreventUnsavedChanges,
+    TabsetConfig
   ],
   bootstrap: [AppComponent]
 })

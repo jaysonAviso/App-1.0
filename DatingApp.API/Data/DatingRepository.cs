@@ -56,11 +56,12 @@ namespace DatingApp.API.Data
 
         public async Task<PagedList<UserListDto>> GetUsers(UserParams userParams)
         {
-            var query = _context.Users
-                .ProjectTo<UserListDto>(_mapper.ConfigurationProvider)
-                .AsNoTracking();
+            var query = _context.Users.AsQueryable();
 
-            return await PagedList<UserListDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
+            query = query.Where(u => u.Username != userParams.CurrentUser);
+            query = query.Where(u => u.Gender == userParams.Gender);
+
+            return await PagedList<UserListDto>.CreateAsync(query.ProjectTo<UserListDto>(_mapper.ConfigurationProvider).AsNoTracking(), userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<bool> SaveAll()

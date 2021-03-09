@@ -18,9 +18,9 @@
     </div>
 
     <div *ngIf="(authservice.currentUser$  | async) as user" class="dropdown" dropdown>
-      <img src="{{user.photoUrl}}" alt="{{user.username}}">
+      <img src="{{user.photoUrl || '../../../../../assets/16.1 user.png.png'}}" alt="{{user.username}}">
       <a class="dropdown-toggle text-light ml-2" dropdownToggle>
-        Welcome {{ user.username | titlecase }}
+        Welcome {{ user.knownAs | titlecase }}
       </a>
 
       <ul class="dropdown-menu mt-3" *dropdownMenu>

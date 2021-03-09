@@ -28,6 +28,7 @@
     "bootswatch": "^4.6.0",
     "command": "0.0.5",
     "font-awesome": "^4.7.0",
+    "ng2-bootstrap": "^1.6.3",
     "ng2-file-upload": "^1.4.0",
     "ngx-bootstrap": "^6.2.0",
     "ngx-gallery": "^5.10.0",

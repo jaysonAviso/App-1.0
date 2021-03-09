@@ -23,19 +23,20 @@ namespace DatingApp.API.Helpers
             return age;
         }
 
-        public static string GetUserId(this ClaimsPrincipal user)
-        {
-            return user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        }
         public static string GetUsername(this ClaimsPrincipal user)
         {
-            return user.FindFirst(ClaimTypes.Name)?.Value;
+            return user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
         public static void AddPagenationHeader(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
         {
             var paginationheader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
-            response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationheader));
+            
+            var option = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+            response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationheader, option));
             response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
     }
