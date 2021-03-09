@@ -3,24 +3,35 @@
   <hr>
 
   <div class="form-group">
-    <input type="username" class="form-control" placeholder="Username" name="username" formControlName="username">
-  </div>
-  <div *ngIf="isValidInput('username')" class="alert alert-danger">
-    <div>
-      Username is required.
-    </div>
+    <label class="control-label">
+      <input type="radio" value="male" formControlName="gender"> Male
+    </label>
+
+    <label class="control-label">
+      <input type="radio" value="female" formControlName="gender" class="ml-3"> Female
+    </label>
   </div>
 
-  <div class="form-group">
-    <input type="password" class="form-control" placeholder="Password" formControlName="password">
-  </div>
+  <app-text-input [formControl]="registerForm.controls['knownAs']" 
+    [label]="'known As'"></app-text-input>
 
-  <div *ngIf="isValidInput('password')"
-    class="alert alert-danger">
-    <div>
-      Password is required.
-    </div>
-  </div>
+  <app-date-input [formControl]="registerForm.controls['dateOfBirth']" 
+    [label]="'Date Of Birth'" [maxDate]="maxDate"></app-date-input>
+
+  <app-text-input [formControl]="registerForm.controls['city']" 
+    [label]="'City'"></app-text-input>
+  
+    <app-text-input [formControl]="registerForm.controls['country']" 
+    [label]="'Country'"></app-text-input>
+
+  <app-text-input [formControl]="registerForm.controls['username']" 
+    [label]="'Username'"></app-text-input>
+  
+  <app-text-input [formControl]="registerForm.controls['password']" 
+    [label]="'Password'" [type]="'password'"></app-text-input>
+  
+  <app-text-input [formControl]="registerForm.controls['confirmPassword']" 
+    [label]="'Confirm Password'" [type]="'password'"></app-text-input>
 
   <div class="form-group text-center">
     <button  class="btn btn-success mr-2" type="submit">Register</button>

@@ -1,5 +1,6 @@
 using System;
 using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
 namespace DatingApp.API.Helpers
@@ -29,6 +30,13 @@ namespace DatingApp.API.Helpers
         public static string GetUsername(this ClaimsPrincipal user)
         {
             return user.FindFirst(ClaimTypes.Name)?.Value;
+        }
+
+        public static void AddPagenationHeader(this HttpResponse response, int currentPage, int itemsPerPage, int totalItems, int totalPages)
+        {
+            var paginationheader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
+            response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationheader));
+            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
     }
 }

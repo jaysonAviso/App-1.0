@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using DatingApp.API.Dtos;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,8 +13,10 @@ namespace DatingApp.API.Data
     public class DatingRepository : IDatingRepository
     {
         private readonly DataContext _context;
-        public DatingRepository(DataContext context)
+        private readonly IMapper _mapper;
+        public DatingRepository(DataContext context, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
 
         }
@@ -32,25 +38,29 @@ namespace DatingApp.API.Data
         }
         public async Task<Photo> GetMainPhoto(int userId)
         {
-            return await _context.Photos.Where(u => u.UserId == userId).FirstOrDefaultAsync(x=> x.IsMain);
+            return await _context.Photos.Where(u => u.UserId == userId).FirstOrDefaultAsync(x => x.IsMain);
         }
-
-        public async Task<User> GetUser(int id)
-        {
-            var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Id == id);
-            return user;
-        }
-
         public async Task<User> GetByUsername(string username)
         {
             var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Username == username);
             return (user);
         }
-
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<User> GetUser(int id)
         {
-            var users = await _context.Users.Include(p => p.Photos).ToListAsync();
-            return users;
+            var user = await _context.Users
+                .Include(p => p.Photos)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return user;
+        }
+
+
+        public async Task<PagedList<UserListDto>> GetUsers(UserParams userParams)
+        {
+            var query = _context.Users
+                .ProjectTo<UserListDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking();
+
+            return await PagedList<UserListDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<bool> SaveAll()
@@ -58,6 +68,6 @@ namespace DatingApp.API.Data
             return await _context.SaveChangesAsync() > 0;
         }
 
-        
+
     }
 }

@@ -50,6 +50,7 @@ namespace DatingApp.API
             services.AddMvc();
             services.AddCors();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
             services.AddScoped<IPhotoService, PhotoService>();

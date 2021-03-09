@@ -4,6 +4,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -32,6 +33,8 @@ import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { TextInputComponent } from './_forms/text-input/text-input.component';
+import { DateInputComponent } from './_forms/date-input/date-input.component';
 
 @NgModule({
   declarations: [								
@@ -45,7 +48,9 @@ import { LoadingInterceptor } from './_interceptors/loading.interceptor';
       MemberEditComponent,
       MessagesComponent,
       ListsComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      TextInputComponent,
+      DateInputComponent
    ],
   imports: [
     BrowserModule,
@@ -57,6 +62,7 @@ import { LoadingInterceptor } from './_interceptors/loading.interceptor';
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     JwtModule,
     NgxGalleryModule,
     NgxSpinnerModule
