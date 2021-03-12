@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs/operators';
+import { LoginUser } from 'src/app/_models/loginUser';
 import { Pagination } from 'src/app/_models/pagination';
+import { UserParams } from 'src/app/_models/userParams';
 import { AuthService } from 'src/app/_services/auth.service';
 import { User } from '../../_models/user';
-import { AlertifyService } from '../../_services/alertify.service';
 import { UserService } from '../../_services/user.service';
 
 @Component({
@@ -14,28 +16,33 @@ import { UserService } from '../../_services/user.service';
 export class MemberListComponent implements OnInit {
   users: User[];
   pagination: Pagination;
-  pageNumber = 1;
-  pageSize = 10;
+  userParams: UserParams;
+  user: LoginUser;
+  genderList = [{value: 'male', display: 'Males'}, {value: 'female', display: 'Females'}]
 
-  constructor(private route: ActivatedRoute, private userService: UserService) { }
+  constructor(private userService: UserService) {
+    this.userParams = this.userService.getUserParams();
+   }
 
   ngOnInit() {
-    this.loadMembers();
-    // this.route.data.subscribe(data => {
-    //   this.users = data['users'];
-    // })
+    this.loadUsers();
   }
 
-  loadMembers() {
-    this.userService.getUsers(this.pageNumber, this.pageSize).subscribe(response => {
+  loadUsers() {
+    this.userService.setUserParams(this.userParams);
+    this.userService.getUsers(this.userParams).subscribe(response => {
       this.users = response.result;
       this.pagination = response.pagination;
     })
   }
 
+  resetFilters() {
+    this.userParams = this.userService.resetUserParams();
+    this.loadUsers();
+  }
   pageChanged(event: any) {
-    this.pageNumber = event.page;
-    console.log("triger");
-    this.loadMembers();
+    this.userParams.pageNumber = event.page;
+    this.userService.setUserParams(this.userParams);
+    this.loadUsers();
   }
 }

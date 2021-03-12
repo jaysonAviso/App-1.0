@@ -53,13 +53,12 @@ namespace DatingApp.API.Data
 
         public async Task<User> Register(User user, string password)
         {
-            // var count = _context.Users.CountAsync().ToString();
-            // user.Id = (int.Parse(count) + 1);
             byte[] passwordHash, passwordSalt;
             createPasswordHash(password, out passwordHash, out passwordSalt);
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
+            user.Created = DateTime.Now;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();

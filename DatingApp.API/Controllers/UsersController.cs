@@ -14,9 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DatingApp.API.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private readonly IDatingRepository _repo;
         private readonly IMapper _mapper;
@@ -50,7 +48,7 @@ namespace DatingApp.API.Controllers
         {
             var user = await _repo.GetByUsername(username);
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            var userToReturn = _mapper.Map<UserDetailedDto>(user);
 
             return Ok(userToReturn);
         }
@@ -98,15 +96,15 @@ namespace DatingApp.API.Controllers
             return BadRequest("Problem adding photo");
         }
 
-        [HttpPost("{id}/setMain")]
-        public async Task<IActionResult> SetMainPhoto(int id)
+        [HttpPost("setMain/{photoId}")]
+        public async Task<IActionResult> SetMainPhoto(int photoId)
         {
             var user = await _repo.GetByUsername(User.GetUsername());
 
-            if(!user.Photos.Any(p => p.Id == id))
+            if(!user.Photos.Any(p => p.Id == photoId))
                 return Unauthorized();
 
-            var photoFromRepo = await _repo.GetPhoto(id);
+            var photoFromRepo = await _repo.GetPhoto(photoId);
 
             if(photoFromRepo.IsMain)
                 return BadRequest("This is allready main photo");

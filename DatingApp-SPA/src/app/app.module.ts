@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsetConfig, TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { TimeagoModule } from 'ngx-timeago';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -61,6 +63,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     ReactiveFormsModule,
     FileUploadModule,
     BrowserAnimationsModule,
+    TimeagoModule.forRoot(),
+    ButtonsModule.forRoot(),
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),

@@ -15,9 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseApiController
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
@@ -43,16 +41,15 @@ namespace DatingApp.API.Controllers
             if (await _repo.isExists(userForRegisterDto.Username))
                 return BadRequest("Username Already Exist.");
 
-            var createdUser = await _repo.Register(user, userForRegisterDto.Password);
-
-            var UserDetailed = _mapper.Map<UserForDetailedDto>(createdUser);
+            await _repo.Register(user, userForRegisterDto.Password);
 
             return new UserDto
             {
                 Username = user.Username,
                 Token = _tokenService.CreateToken(user),
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-                KnownAs = user.KnownAS
+                PhotoUrl = user.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
+                KnownAs = user.KnownAS,
+                Gender = user.Gender
             };
         }
 
@@ -68,8 +65,9 @@ namespace DatingApp.API.Controllers
             {
                 Username = user.Username,
                 Token = _tokenService.CreateToken(user),
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-                KnownAs = user.KnownAS
+                PhotoUrl = user.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
+                KnownAs = user.KnownAS,
+                Gender = user.Gender
             };
 
         }
