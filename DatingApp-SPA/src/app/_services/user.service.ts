@@ -1,4 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -48,7 +49,7 @@ export class UserService {
     params = params.append('gender', userParams.gender);
     params = params.append('orderBy', userParams.orderBy);
 
-    return this.getPaginationResult<User[]>(`${this.baseUrl}users`, params)
+    return this.getPaginatedResult<User[]>(`${this.baseUrl}users`, params)
     .pipe(map(response => {
       this.userCache.set(Object.values(userParams).join('-'), response);
       return response;
@@ -79,8 +80,16 @@ export class UserService {
   deletePhoto(photoId: number) {
     return this.http.delete(`${this.baseUrl}users/delete-photo/${photoId}`)
   }
+  addLike(username: string) {
+    return this.http.post(`${this.baseUrl}likes/${username}`, {});
+  }
+  getLikes(predicate: string, pageNumber: number, pageSize: number) {
+    let params = this.getPaginationHeader(pageNumber, pageSize);
+    params = params.append('predicate', predicate);
+    return this.getPaginatedResult<Partial<User[]>>(`${this.baseUrl}likes`, params);
+  }
 
-  private getPaginationResult<T>(url, params) {
+  private getPaginatedResult<T>(url, params) {
     const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();
 
     return this.http.get<T>(url, { observe: 'response', params }).pipe(

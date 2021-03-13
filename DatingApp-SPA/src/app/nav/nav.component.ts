@@ -13,7 +13,8 @@ export class NavComponent implements OnInit {
   loginForm: FormGroup;
 
   constructor(private validator: FormBuilder, public authservice: AuthService,
-    private alertify: AlertifyService, private router: Router) { }
+    private alertify: AlertifyService, private router: Router) {
+    }
 
   ngOnInit() {
     this.initForm();

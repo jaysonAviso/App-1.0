@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { take } from 'rxjs/operators';
 import { LoginUser } from 'src/app/_models/loginUser';
 import { Pagination } from 'src/app/_models/pagination';
 import { UserParams } from 'src/app/_models/userParams';
-import { AuthService } from 'src/app/_services/auth.service';
 import { User } from '../../_models/user';
 import { UserService } from '../../_services/user.service';
 
