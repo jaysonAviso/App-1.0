@@ -9,6 +9,11 @@ namespace DatingApp.API.Helpers
     {
         public AutoMapperProfiles()
         {
+            CreateMap<UserForUpdateDto, User>();
+            CreateMap<PhotoForCreationDto, Photo>();
+            CreateMap<PhotoDto, Photo>().ReverseMap();
+            CreateMap<UserForRegisterDto, User>().ReverseMap();
+            
             CreateMap<User, UserDetailedDto>()
                 .ForMember(dest => dest.PhotoUrl, opt => {
                     opt.MapFrom(src => src.Photos.FirstOrDefault(p => p.IsMain).Url);
@@ -16,11 +21,14 @@ namespace DatingApp.API.Helpers
                 .ForMember(dest => dest.Age, opt => {
                     opt.MapFrom(p => p.DateOfBirth.calculateAge());
                 });
-                
-            CreateMap<UserForUpdateDto, User>();
-            CreateMap<PhotoForCreationDto, Photo>();
-            CreateMap<PhotoDto, Photo>().ReverseMap();
-            CreateMap<UserForRegisterDto, User>().ReverseMap();
+
+            CreateMap<Message, MessageDto>()
+                .ForMember(dest => dest.SenderPhotoUrl, opt => {
+                    opt.MapFrom(src => src.Sender.Photos.FirstOrDefault(x => x.IsMain).Url);
+                })
+                .ForMember(dest => dest.RecipientPhotoUrl, opt => {
+                    opt.MapFrom(src => src.Recipient.Photos.FirstOrDefault(x => x.IsMain).Url);
+                });
         }
     }
 }

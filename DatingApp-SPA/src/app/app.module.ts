@@ -38,6 +38,8 @@ import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DateInputComponent } from './_forms/date-input/date-input.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { MemberMessageComponent } from './Members/member-message/member-message.component';
+
 
 @NgModule({
   declarations: [								
@@ -49,6 +51,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
+      MemberMessageComponent,
       MessagesComponent,
       ListsComponent,
       PhotoEditorComponent,
