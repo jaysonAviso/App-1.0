@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using DatingApp.API.Models;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace DatingApp.API.Data
@@ -14,34 +17,24 @@ namespace DatingApp.API.Data
 
         }
 
-        public void SeedUsers() 
+        public static async Task SeedUsers(DataContext context) 
         {
-            var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
-            var users = JsonConvert.DeserializeObject<List<User>>(userData);
+            if(await context.Users.AnyAsync()) return;
 
+            var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
+            var users = JsonConvert.DeserializeObject<List<User>>(userData);
             foreach (var user in users)
             {
-                byte[] passwordHash, passwordSalt;
-                createPasswordHash("password", out passwordHash, out passwordSalt);
+                using var hmac = new HMACSHA512();
 
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
                 user.Username = user.Username.ToLower();
+                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("password"));
+                user.PasswordSalt = hmac.Key;
 
-                _context.Users.Add(user);
-            };
-
-            _context.SaveChanges();
-        }
-
-
-        private void createPasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using(var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                context.Users.Add(user);
             }
+
+            await context.SaveChangesAsync();
         }
     }
 }
