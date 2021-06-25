@@ -13,6 +13,9 @@
           <li class="nav-item" routerLinkActive="active" >
             <a class="nav-link" [routerLink]="['/messages']">Messages</a>
           </li>
+          <li *appHasRole="['Admin', 'Moderator']" class="nav-item" routerLinkActive="active" >
+            <a class="nav-link" [routerLink]="['/admin']">Admin</a>
+          </li>
         </ng-container>
       </ul>
     </div>
@@ -20,7 +23,7 @@
     <div *ngIf="(authservice.currentUser$  | async) as user" class="dropdown" dropdown>
       <img src="{{user.photoUrl || '../../../../assets/user.png'}}" alt="{{user.username}}">
       <a class="dropdown-toggle text-light ml-2" dropdownToggle>
-        Welcome {{ user.knownAs | titlecase }}
+        Welcome {{ user.knownAs || user.username | titlecase }}
       </a>
 
       <ul class="dropdown-menu mt-3" *dropdownMenu>

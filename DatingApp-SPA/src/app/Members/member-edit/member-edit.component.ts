@@ -1,9 +1,9 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs/operators';
 import { User } from 'src/app/_models/user';
-import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { UserService } from 'src/app/_services/user.service';
 
@@ -23,7 +23,7 @@ export class MemberEditComponent implements OnInit {
   }
 
 
-  constructor(private route: ActivatedRoute,private alertify: AlertifyService,
+  constructor(private route: ActivatedRoute,private toastr: ToastrService,
     private userService: UserService, private authService: AuthService) { }
 
   ngOnInit() {
@@ -35,10 +35,10 @@ export class MemberEditComponent implements OnInit {
     let user;
     this.authService.currentUser$.pipe(take(1)).subscribe(takeUser => user = takeUser)
     this.userService.updateUser(user.username , this.user).subscribe(next => {
-      this.alertify.success('Profile updated successfully')
+      this.toastr.success('Profile updated successfully')
       this.editForm.reset(this.user);
     }, error => {
-      this.alertify.error(error);
+      this.toastr.error(error);
     });
   } 
 }

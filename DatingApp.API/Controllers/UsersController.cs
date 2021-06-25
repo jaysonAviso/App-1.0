@@ -9,6 +9,7 @@ using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
@@ -24,14 +25,13 @@ namespace DatingApp.API.Controllers
             _photoService = photoService;
             _mapper = mapper;
             _repo = repo;
-
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
             var user = await _repo.GetByUsername(User.GetUsername());
-            userParams.CurrentUser = user.Username;
+            userParams.CurrentUser = user.UserName;
 
             if(string.IsNullOrEmpty(userParams.Gender))
                 userParams.Gender = user.Gender == "male"? "female" : "male";
@@ -48,6 +48,8 @@ namespace DatingApp.API.Controllers
         {
             var user = await _repo.GetByUsername(username);
 
+            if (user == null) return BadRequest("there's no username " + username);
+
             var userToReturn = _mapper.Map<UserDetailedDto>(user);
 
             return Ok(userToReturn);
@@ -56,8 +58,7 @@ namespace DatingApp.API.Controllers
         [HttpPut("{username}", Name = "GetUser")]
         public async Task<IActionResult> UpdateUser(string username, UserForUpdateDto userForUpdateDto)
         {
-            if (username != User.GetUsername())
-                return Unauthorized();
+            if (username != User.GetUsername()) return Unauthorized();
 
             var userFromRepo = await _repo.GetByUsername(username);
 

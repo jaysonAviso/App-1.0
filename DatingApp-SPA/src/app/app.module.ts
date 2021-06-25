@@ -14,8 +14,6 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { AuthService } from './_services/auth.service';
-import { AlertifyService } from './_services/alertify.service';
 import { MessagesComponent } from './Messages/Messages.component';
 import { ListsComponent } from './Lists/Lists.component';
 import { UserService } from './_services/user.service';
@@ -39,6 +37,13 @@ import { TextInputComponent } from './_forms/text-input/text-input.component';
 import { DateInputComponent } from './_forms/date-input/date-input.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { MemberMessageComponent } from './Members/member-message/member-message.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/has-role.directive';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
+import { RolesModalComponent } from './modals/roles-modal/roles-modal.component';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -56,7 +61,12 @@ import { MemberMessageComponent } from './Members/member-message/member-message.
       ListsComponent,
       PhotoEditorComponent,
       TextInputComponent,
-      DateInputComponent
+      DateInputComponent,
+      AdminPanelComponent,
+      HasRoleDirective,
+      UserManagementComponent,
+      PhotoManagementComponent,
+      RolesModalComponent
    ],
   imports: [
     BrowserModule,
@@ -71,10 +81,14 @@ import { MemberMessageComponent } from './Members/member-message/member-message.
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-right'
+    }),
     JwtModule,
     PaginationModule,
     NgxGalleryModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    ModalModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
@@ -84,7 +98,8 @@ import { MemberMessageComponent } from './Members/member-message/member-message.
     MemberlistResolver,
     MemberEditResolver,
     PreventUnsavedChanges,
-    TabsetConfig
+    TabsetConfig,
+    BsModalService
   ],
   bootstrap: [AppComponent]
 })

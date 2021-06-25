@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertifyService } from '../_services/alertify.service';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../_services/auth.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class NavComponent implements OnInit {
   loginForm: FormGroup;
 
   constructor(private validator: FormBuilder, public authservice: AuthService,
-    private alertify: AlertifyService, private router: Router) {
+    private toastr: ToastrService, private router: Router) {
     }
 
   ngOnInit() {
@@ -35,9 +35,9 @@ export class NavComponent implements OnInit {
   login() {
     
     this.authservice.login(this.loginForm.value).subscribe(next=> {
-      this.alertify.success('Logged in successfully')
+      this.toastr.success('Logged in successfully')
     }, error => {
-      this.alertify.error(error);
+      this.toastr.error(error);
     }, () => {
       this.router.navigate(['/members']);
     })
@@ -45,7 +45,7 @@ export class NavComponent implements OnInit {
 
   logout() {
     this.authservice.logout();
-    this.alertify.message('logged out');
+    this.toastr.show('logged out');
     this.router.navigate(['/home']);
   }
   

@@ -1,7 +1,8 @@
 export interface LoginUser {
-    username: String;
-    token: String;
-    photoUrl: String;
-    knownAs: String;
-    gender: String;
+    userName: string;
+    token: string;
+    photoUrl: string;
+    knownAs: string;
+    gender: string;
+    roles: string[];
 }

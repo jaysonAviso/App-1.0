@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AlertifyService } from '../_services/alertify.service';
 import { AuthService } from '../_services/auth.service';
 
 @Injectable({
@@ -11,13 +11,13 @@ import { AuthService } from '../_services/auth.service';
 export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router,
-    private alertify: AlertifyService) {}
+    private toastr: ToastrService) {}
   canActivate(): Observable<boolean> {
 
     return this.authService.currentUser$.pipe(
       map(user => {
         if(user) return true;
-        this.alertify.error("You shall not pass!");
+        this.toastr.error("You shall not pass!");
         this.router.navigate(['/home']);
       })
     );

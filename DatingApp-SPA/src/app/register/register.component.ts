@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { AlertifyService } from '../_services/alertify.service';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../_services/auth.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   maxDate = new Date();
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private alertify: AlertifyService) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.initForm();
@@ -46,15 +46,15 @@ export class RegisterComponent implements OnInit {
 
   register() {
     this.authService.register(this.registerForm.value).subscribe(() =>{
-      this.alertify.success('registration successful');
+      this.toastr.success('registration successful');
     }, error => {
-       this.alertify.error(error);
+       this.toastr.error(error);
     });
   }
 
   cancel() {
     this.cancelRegister.emit(false);
-    this.alertify.message('cancelled')
+    this.toastr.show('cancelled')
   }
 
 }

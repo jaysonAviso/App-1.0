@@ -4,9 +4,9 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { environment } from 'src/environments/environment';
 import { Photo } from 'src/app/_models/photo';
 import { UserService } from 'src/app/_services/user.service';
-import { AlertifyService } from 'src/app/_services/alertify.service';
 import { User } from 'src/app/_models/user';
 import { LoginUser } from 'src/app/_models/loginUser';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-photo-editor',
@@ -22,7 +22,7 @@ export class PhotoEditorComponent implements OnInit {
   LoginUser: LoginUser;
 
   constructor(private authService: AuthService,
-    private userService: UserService, private alertify: AlertifyService) { }
+    private userService: UserService, private toastr: ToastrService) { }
   
 
   ngOnInit() {
@@ -70,7 +70,7 @@ export class PhotoEditorComponent implements OnInit {
       this.currentMain = this.user.photos.filter(p => p.isMain == true)[0];
       this.currentMain.isMain = false;
       photo.isMain = true;
-    }, error => this.alertify.error(error));
+    }, error => this.toastr.error(error));
   }
 
   deletePhoto(photoId: number) {

@@ -3,7 +3,6 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { take } from 'rxjs/operators';
 import { LoginUser } from './_models/loginUser';
 import { User } from './_models/user';
-import { AlertifyService } from './_services/alertify.service';
 import { AuthService } from './_services/auth.service';
 
 @Component({
@@ -23,7 +22,11 @@ export class AppComponent implements OnInit {
   }
   setCurrentUser() {
     const user: LoginUser = JSON.parse(localStorage.getItem('user'));
-    // this.authService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
-    this.authService.setCurrentUser(user);
+    console.log(user);
+    
+    if (user !== null) {
+      // this.authService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
+      this.authService.setCurrentUser(user);
+    }
   }
 }

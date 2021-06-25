@@ -42,8 +42,8 @@ namespace DatingApp.API.Controllers
             {
                 Sender = sender,
                 Recipient = recipient,
-                SenderUsername = sender.Username,
-                RecipientUsername = recipient.Username,
+                SenderUsername = sender.UserName,
+                RecipientUsername = recipient.UserName,
                 Content = createMessageDto.Content
             };
 
@@ -81,11 +81,11 @@ namespace DatingApp.API.Controllers
 
             var message =  await _messageRepo.GetMessage(id);
 
-            if (message.Sender.Username != usermame && message.Recipient.Username != usermame) return Unauthorized();
+            if (message.Sender.UserName != usermame && message.Recipient.UserName != usermame) return Unauthorized();
 
-            if (message.Sender.Username == usermame) message.SenderDeleted = true;
+            if (message.Sender.UserName == usermame) message.SenderDeleted = true;
 
-            if (message.Recipient.Username == usermame) message.RecipientDeleted = true;
+            if (message.Recipient.UserName == usermame) message.RecipientDeleted = true;
 
             if (message.SenderDeleted && message.RecipientDeleted) _messageRepo.DeleteMessage(message);
 

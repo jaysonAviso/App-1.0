@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace DatingApp.API.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
         public string Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string KnownAS { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime LastActive { get; set; }
+        public DateTime Created { get; set; } = DateTime.Now;
+        public DateTime LastActive { get; set; } = DateTime.Now;
         public string Introduction { get; set; }
         public string LookingFor { get; set; }
         public string Interests { get; set; }
@@ -24,5 +21,6 @@ namespace DatingApp.API.Models
         public ICollection<UserLike> LikedUsers { get; set; }
         public ICollection<Message> MessagesSent { get; set; }
         public ICollection<Message> MessagesReceived { get; set; }
+        public ICollection<UserRole> UserRole {get; set;}
     }
 }

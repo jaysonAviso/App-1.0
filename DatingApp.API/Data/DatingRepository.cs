@@ -7,6 +7,7 @@ using AutoMapper.QueryableExtensions;
 using DatingApp.API.Dtos;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Data
@@ -15,8 +16,10 @@ namespace DatingApp.API.Data
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        public DatingRepository(DataContext context, IMapper mapper)
+        private readonly UserManager<User> _userManager;
+        public DatingRepository(UserManager<User> userManager, DataContext context, IMapper mapper)
         {
+            _userManager = userManager;
             _mapper = mapper;
             _context = context;
 
@@ -47,12 +50,12 @@ namespace DatingApp.API.Data
         }
         public async Task<User> GetByUsername(string username)
         {
-            var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.Username == username);
+            var user = await _userManager.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.UserName == username);
             return (user);
         }
         public async Task<User> GetUser(int id)
         {
-            var user = await _context.Users
+            var user = await _userManager.Users
                 .Include(p => p.Photos)
                 .FirstOrDefaultAsync(x => x.Id == id);
             return user;
@@ -61,9 +64,9 @@ namespace DatingApp.API.Data
 
         public async Task<PagedList<UserDetailedDto>> GetUsers(UserParams userParams)
         {
-            var query = _context.Users.AsQueryable();
+            var query = _userManager.Users.AsQueryable();
 
-            query = query.Where(u => u.Username != userParams.CurrentUser);
+            query = query.Where(u => u.UserName != userParams.CurrentUser);
             query = query.Where(u => u.Gender == userParams.Gender);
 
             var minDob = DateTime.Today.AddYears(-userParams.MaxAge -1);
